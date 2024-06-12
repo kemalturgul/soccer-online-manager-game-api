@@ -1,0 +1,1 @@
+rootProject.name = "soccer-online-manager-game-api"
