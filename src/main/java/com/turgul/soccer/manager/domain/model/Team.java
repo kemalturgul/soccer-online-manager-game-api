@@ -9,6 +9,7 @@ import lombok.*;
 import org.springframework.util.CollectionUtils;
 
 @Data
+@With
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor

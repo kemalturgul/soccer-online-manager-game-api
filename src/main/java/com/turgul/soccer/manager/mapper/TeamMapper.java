@@ -2,9 +2,7 @@ package com.turgul.soccer.manager.mapper;
 
 import com.turgul.soccer.manager.domain.model.Team;
 import com.turgul.soccer.manager.dto.response.TeamResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.MappingConstants;
-import org.mapstruct.ReportingPolicy;
+import org.mapstruct.*;
 
 @Mapper(
     componentModel = MappingConstants.ComponentModel.SPRING,

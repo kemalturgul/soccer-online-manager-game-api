@@ -1,7 +1,7 @@
 package com.turgul.soccer.manager.service;
 
-import static com.turgul.soccer.manager.Constants.TEAM_BUDGET;
-import static com.turgul.soccer.manager.Constants.TEAM_COUNTRY;
+import static com.turgul.soccer.manager.Constants.DEFAULT_TEAM_BUDGET;
+import static com.turgul.soccer.manager.Constants.DEFAULT_TEAM_COUNTRY;
 
 import com.turgul.soccer.manager.domain.PlayingPosition;
 import com.turgul.soccer.manager.domain.model.Player;
@@ -9,13 +9,16 @@ import com.turgul.soccer.manager.domain.model.Team;
 import com.turgul.soccer.manager.domain.model.Users;
 import com.turgul.soccer.manager.dto.request.TeamUpdateRequest;
 import com.turgul.soccer.manager.repository.TeamRepository;
+import com.turgul.soccer.manager.repository.UserRepository;
 import java.security.Principal;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -23,6 +26,19 @@ public class TeamService {
 
   private final PlayerService playerService;
   private final TeamRepository teamRepository;
+  private final UserRepository userRepository;
+
+  public Optional<Team> getTeam(String userEmail) {
+    var user =
+        userRepository
+            .findByEmail(userEmail)
+            .orElseThrow(
+                () ->
+                    new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "User not found to get its team!"));
+
+    return teamRepository.findById(user.getTeam().getId());
+  }
 
   public Optional<Team> getTeam(Long teamId, Principal principal) {
     return teamRepository
@@ -52,8 +68,8 @@ public class TeamService {
     Team team =
         Team.builder()
             .name(createTeamName(user.getFirstName(), user.getLastName()))
-            .country(TEAM_COUNTRY)
-            .teamCash(TEAM_BUDGET)
+            .country(DEFAULT_TEAM_COUNTRY)
+            .teamCash(DEFAULT_TEAM_BUDGET)
             .user(user)
             .build();
 

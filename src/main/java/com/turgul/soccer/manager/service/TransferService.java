@@ -121,7 +121,7 @@ public class TransferService {
     if (newTeamOfPlayer.getTeamCash() < transfer.getRequestedValue()) {
       throw new ResponseStatusException(
           HttpStatus.BAD_REQUEST,
-          "Insufficient budget to transfer this player:" + newTeamOfPlayer.getTeamCash());
+          "Insufficient budget to transfer this player, teamCash:" + newTeamOfPlayer.getTeamCash());
     }
 
     transferRepository.updateTransfer(newTeamOfPlayer, Boolean.TRUE, transferId);
@@ -129,13 +129,13 @@ public class TransferService {
         newTeamOfPlayer, transfer.getRequestedValue(), transfer.getPlayer().getId());
 
     // Update new player's team
-    Long teamCash = newTeamOfPlayer.getTeamCash() - transfer.getRequestedValue();
-    Long teamValue = newTeamOfPlayer.calculateTeamValue() + transfer.getRequestedValue();
-    teamRepository.updateTeamCashAndValue(teamCash, teamValue, newTeamOfPlayer.getId());
+    long teamCash = newTeamOfPlayer.getTeamCash() - transfer.getRequestedValue();
+    long teamValue = newTeamOfPlayer.calculateTeamValue();
+    teamRepository.updateTeamCashAndValue(teamValue, teamCash, newTeamOfPlayer.getId());
 
     // Update previous team
     teamCash = transfer.getCurrentTeam().getTeamCash() + transfer.getRequestedValue();
-    teamValue = transfer.getCurrentTeam().calculateTeamValue() - transfer.getRequestedValue();
-    teamRepository.updateTeamCashAndValue(teamCash, teamValue, transfer.getCurrentTeam().getId());
+    teamValue = transfer.getCurrentTeam().calculateTeamValue();
+    teamRepository.updateTeamCashAndValue(teamValue, teamCash, transfer.getCurrentTeam().getId());
   }
 }

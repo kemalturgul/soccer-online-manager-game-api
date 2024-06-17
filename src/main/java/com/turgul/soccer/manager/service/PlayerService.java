@@ -45,7 +45,7 @@ public class PlayerService {
         .lastName(lastName)
         .age(getRandomAge())
         .position(playingPosition)
-        .marketValue(PLAYER_MARKET_VALUE)
+        .marketValue(DEFAULT_PLAYER_MARKET_VALUE)
         .team(team)
         .build();
   }

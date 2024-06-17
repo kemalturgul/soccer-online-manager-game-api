@@ -9,4 +9,6 @@ public interface AuthenticationService {
   void signUp(SignUpRequest request);
 
   JwtAuthenticationResponse signIn(SignInRequest request);
+
+  void deleteUser(String userEmail);
 }

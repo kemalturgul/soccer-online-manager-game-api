@@ -33,10 +33,7 @@ public class TeamController {
       summary = "Get team detail",
       description = "Returns team information for given id",
       tags = {"Get"})
-  @Parameter(
-      name = "teamId",
-      description = "Id of the team to get its information",
-      required = true)
+  @Parameter(name = "teamId", description = "Id of the team to get its detail", required = true)
   @GetMapping("/{teamId}")
   public ResponseEntity<TeamResponse> getTeam(@PathVariable Long teamId, Principal principal) {
     log.info("getTeam request received for teamId:{}", teamId);
@@ -49,10 +46,26 @@ public class TeamController {
   }
 
   @Operation(
+      summary = "Get team detail",
+      description = "Returns team information for given id",
+      tags = {"Get"})
+  @Parameter(name = "teamId", description = "Id of the team to get its details", required = true)
+  @GetMapping("/team-of-user")
+  public ResponseEntity<TeamResponse> getTeam(Principal principal) {
+    log.info("getTeam request received");
+    Optional<TeamResponse> teamResponse =
+        teamService.getTeam(principal.getName()).map(teamMapper::map);
+
+    return teamResponse
+        .map(ResponseEntity::ok)
+        .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+  }
+
+  @Operation(
       summary = "Update team data",
       description = "Updates team attributes with requested new data for given id",
-      tags = {"Patch"})
-  @PatchMapping("/update")
+      tags = {"Put"})
+  @PutMapping("/update")
   public ResponseEntity<TeamResponse> updateTeam(
       @Valid @RequestBody TeamUpdateRequest updateRequest, Principal principal)
       throws JsonProcessingException {

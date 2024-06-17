@@ -64,6 +64,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         .build();
   }
 
+  @Override
+  public void deleteUser(String userEmail) {
+    var userOptional = userRepository.findByEmail(userEmail);
+    userOptional.ifPresent(user -> userRepository.deleteById(user.getId()));
+  }
+
   private Users createUserEntity(SignUpRequest request) {
     return Users.builder()
         .role(Role.USER)
